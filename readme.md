@@ -116,3 +116,84 @@ Devuelve una lista de publicaciones técnicas aleatorias, mostrando las últimas
 ```
 curl "http://fakeapi.showvlad.com/api/professional-posts?user=johndoe"
 ```
+
+
+## Event Authorization API
+
+### Endpoint: `GET /api/event-authorization`
+
+#### Descripción
+Este endpoint simula la verificación de autorización para ingresar a un evento basado en un número de DNI.
+Tiene un 50% de probabilidad de autorizar o denegar el acceso.
+
+#### Parámetros de consulta:
+- `dni` (string) **[Requerido]**: Número de DNI a verificar.
+
+#### Respuesta:
+```json
+{
+  "dni": "12345678",
+  "authorized": true,
+  "message": "El DNI está autorizado para ingresar al evento."
+}
+```
+
+- dni: El número de DNI consultado.
+- authorized: Booleano que indica si el DNI está autorizado (true) o no (false).
+- message: Mensaje descriptivo sobre la autorización.
+
+### Ejemplo de uso:
+```
+curl "http://fakeapi.showvlad.com/api/event-authorization?dni=12345678"
+```
+
+## Event Drinks API
+
+### Endpoint: `GET /api/event-drinks`
+
+#### Descripción
+Este endpoint proporciona una lista de bebidas disponibles para un evento, incluyendo detalles como nombre, descripción, precio, si contiene alcohol y la URL de la imagen.
+
+#### Parámetros de consulta:
+No requiere parámetros.
+
+#### Respuesta:
+```json
+[
+  {
+    "id": 1,
+    "name": "Coca-Cola",
+    "description": "Refresco carbonatado clásico",
+    "price": 2.50,
+    "alcoholic": false,
+    "image": "/img/cocacola.png"
+  },
+  {
+    "id": 2,
+    "name": "Heineken",
+    "description": "Cerveza lager premium holandesa",
+    "price": 3.50,
+    "alcoholic": true,
+    "image": "/img/heineken.png"
+  }
+]
+```
+
+- id: Identificador único de la bebida.
+- name: Nombre de la bebida.
+- description: Breve descripción de la bebida.
+- price: Precio de la bebida.
+- alcoholic: Booleano que indica si la bebida contiene alcohol (true) o no (false).
+- image: URL relativa de la imagen de la bebida.
+
+### Ejemplo de uso:
+```
+curl "http://fakeapi.showvlad.com/api/event-drinks"
+```
+
+### Nota sobre las imágenes:
+Las imágenes de las bebidas se pueden acceder utilizando la URL base de la API seguida de la ruta de imagen proporcionada. Por ejemplo:
+```
+http://fakeapi.showvlad.com/img/cocacola.png
+```
+```
