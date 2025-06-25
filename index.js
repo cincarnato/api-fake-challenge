@@ -1,7 +1,53 @@
 import Fastify from 'fastify';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import FastifyStatic from '@fastify/static';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const fastify = Fastify({ logger: true });
 
+// Registrar el plugin fastify-static
+fastify.register(FastifyStatic, {
+  root: path.join(__dirname, 'img'),
+  prefix: '/img/', // This will be the prefix for accessing images
+});
+
+fastify.get('/', async (request, reply) => {
+  return reply.send({
+    message: "Bienvenido a la API Fake para Challenges Técnicos de Desarrollo",
+    description: "Esta API proporciona endpoints simulados para diversos escenarios comunes en aplicaciones web y móviles.",
+    purpose: "Diseñada para ser utilizada en desafíos técnicos de desarrollo, permitiendo a los candidatos demostrar sus habilidades en la integración y manejo de APIs.",
+    endpoints: [
+      {
+        path: "/api/data-breach-check",
+        description: "Simula la verificación de filtración de datos para un email."
+      },
+      {
+        path: "/api/company-reviews",
+        description: "Proporciona reseñas simuladas para empresas."
+      },
+      {
+        path: "/api/professional-posts",
+        description: "Genera publicaciones profesionales aleatorias para un usuario."
+      },
+      {
+        path: "/api/event-authorization",
+        description: "Simula la autorización de ingreso a un evento basado en DNI."
+      },
+      {
+        path: "/api/event-drinks",
+        description: "Lista bebidas disponibles para un evento, incluyendo detalles e imágenes."
+      },
+      {
+        path: "/img/:imageName",
+        description: "Sirve imágenes estáticas para las bebidas del evento."
+      }
+    ],
+    note: "Todos los datos proporcionados por esta API son ficticios y generados aleatoriamente para fines de desarrollo y pruebas."
+  });
+});
 
 fastify.get('/api/data-breach-check', async (request, reply) => {
     const { email } = request.query;
@@ -25,10 +71,6 @@ fastify.get('/api/data-breach-check', async (request, reply) => {
         breaches: leakSources.slice(0, breachCount)
     });
 });
-
-
-
-
 
 fastify.get('/api/company-reviews', async (request, reply) => {
     const { companies } = request.query;
@@ -89,8 +131,6 @@ fastify.get('/api/company-reviews', async (request, reply) => {
     return reply.send(reviewsForCompanies);
 });
 
-
-
 fastify.get('/api/professional-posts', async (request, reply) => {
     const { user } = request.query;
 
@@ -127,6 +167,156 @@ fastify.get('/api/professional-posts', async (request, reply) => {
         user,
         posts: selectedPosts
     });
+});
+
+fastify.get('/api/event-authorization', async (request, reply) => {
+    const { dni } = request.query;
+
+    if (!dni) {
+        return reply.status(400).send({ error: 'DNI parameter is required' });
+    }
+
+    // Generar una autorización aleatoria con 50% de probabilidad
+    const isAuthorized = Math.random() < 0.5;
+
+    return reply.send({
+        dni,
+        authorized: isAuthorized,
+        message: isAuthorized 
+            ? 'El DNI está autorizado para ingresar al evento.' 
+            : 'El DNI no está autorizado para ingresar al evento.'
+    });
+});
+
+fastify.get('/api/event-drinks', async (request, reply) => {
+    const drinks = [
+        {
+            id: 1,
+            name: "Coca-Cola",
+            description: "Refresco carbonatado clásico",
+            price: 2.50,
+            alcoholic: false,
+            image: "/img/cocacola.png"
+        },
+        {
+            id: 2,
+            name: "Heineken",
+            description: "Cerveza lager premium holandesa",
+            price: 3.50,
+            alcoholic: true,
+            image: "/img/heineken.png"
+        },
+        {
+            id: 3,
+            name: "Agua Mineral",
+            description: "Agua natural sin gas",
+            price: 1.50,
+            alcoholic: false,
+            image: "/img/agua.png"
+        },
+        {
+            id: 4,
+            name: "Margarita",
+            description: "Cóctel a base de tequila, triple sec y lima",
+            price: 7.00,
+            alcoholic: true,
+            image: "/img/margarita.png"
+        },
+        {
+            id: 5,
+            name: "Sprite",
+            description: "Refresco de lima-limón",
+            price: 2.50,
+            alcoholic: false,
+            image: "/img/sprite.png"
+        },
+        {
+            id: 6,
+            name: "Mojito",
+            description: "Cóctel cubano a base de ron, lima, menta y azúcar",
+            price: 6.50,
+            alcoholic: true,
+            image: "/img/mojito.png"
+        },
+        {
+            id: 7,
+            name: "Fanta",
+            description: "Refresco carbonatado de naranja",
+            price: 2.50,
+            alcoholic: false,
+            image: "/img/fanta.png"
+        },
+        {
+            id: 8,
+            name: "Gin Tonic",
+            description: "Cóctel de ginebra y agua tónica",
+            price: 6.00,
+            alcoholic: true,
+            image: "/img/gintonic.png"
+        },
+        {
+            id: 9,
+            name: "Limonada",
+            description: "Bebida refrescante de limón natural",
+            price: 3.00,
+            alcoholic: false,
+            image: "/img/limonada.png"
+        },
+        {
+            id: 10,
+            name: "Whisky on the Rocks",
+            description: "Whisky servido con hielo",
+            price: 8.00,
+            alcoholic: true,
+            image: "/img/whisky.png"
+        },
+        {
+            id: 11,
+            name: "Té Helado",
+            description: "Té frío con un toque de limón",
+            price: 2.75,
+            alcoholic: false,
+            image: "/img/tehelado.png"
+        },
+        {
+            id: 12,
+            name: "Piña Colada",
+            description: "Cóctel tropical a base de ron, coco y piña",
+            price: 7.50,
+            alcoholic: true,
+            image: "/img/pinacolada.png"
+        },
+        {
+            id: 13,
+            name: "Smoothie de Frutas",
+            description: "Batido de frutas frescas variadas",
+            price: 4.50,
+            alcoholic: false,
+            image: "/img/smoothie.png"
+        },
+        {
+            id: 14,
+            name: "Cerveza Artesanal IPA",
+            description: "Cerveza India Pale Ale con sabor intenso y amargo",
+            price: 5.00,
+            alcoholic: true,
+            image: "/img/ipa.png"
+        },
+        {
+            id: 15,
+            name: "Jugo de Naranja Natural",
+            description: "Zumo de naranja recién exprimido",
+            price: 3.25,
+            alcoholic: false,
+            image: "/img/jugonaranja.png"
+        }
+    ];
+
+    return reply.send(drinks);
+});
+
+fastify.get('/img/:imageName', async (request, reply) => {
+  return reply.sendFile(request.params.imageName);
 });
 
 const start = async () => {
